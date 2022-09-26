@@ -551,7 +551,7 @@ public class frm_quartos extends javax.swing.JFrame {
     }//GEN-LAST:event_tb_listaMouseClicked
 
     private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
-        // TODO add your handling code here:
+        // test
         limpar();
     }//GEN-LAST:event_btn_cancelarActionPerformed
 
