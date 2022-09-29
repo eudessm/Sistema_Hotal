@@ -1,7 +1,6 @@
-
 package Logica;
 
-import Dados.vQuartos;
+import Dados.vProdutos;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,35 +8,30 @@ import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-
-public class fQuartos {
+public class fProdutos {
 
     private Conexao mysql = new Conexao();
     private Connection cn = mysql.conectar();
     private String sSQL = "";
-    public Integer  totalRegistro;
 
     public DefaultTableModel mostrar(String buscar) {
         DefaultTableModel modelo;
         // vai aparecer no cabeçalho da lista  "titulo"
-        String[] titulo = {"id", "numero", "andar", "descrição", "caracteristicas", "preço", "Status", "Tipo de Quarto"};
-        String[] registro = new String[8];
-        totalRegistro = 0;
+        String[] titulo = {"id", "Produto", "descrição", "Unidade Medida", "Preço Venda"};
+        String[] registro = new String[5];
+
         modelo = new DefaultTableModel(null, titulo);
-        sSQL = "select * from tb_quartos where andar like '%" + buscar + "%' order by id_quartos";
+        sSQL = "Select * from tb_produtos where nome like '%" + buscar + "%' order by id_produtos";
 
         try {
             Statement st = cn.createStatement();
             ResultSet rs = st.executeQuery(sSQL);
             while (rs.next()) {
-                registro[0] = rs.getString("id_quartos");
-                registro[1] = rs.getString("numero");
-                registro[2] = rs.getString("andar");
-                registro[3] = rs.getString("descricao");
-                registro[4] = rs.getString("caracteristicas");
-                registro[5] = rs.getString("preco_diaria");
-                registro[6] = rs.getString("estado");
-                registro[7] = rs.getString("tipo_quarto");
+                registro[0] = rs.getString("id_produtos");
+                registro[1] = rs.getString("nome");
+                registro[2] = rs.getString("descricao");
+                registro[3] = rs.getString("unidade_medida");
+                registro[4] = rs.getString("preco_venda");
                 modelo.addRow(registro);
             }
             return modelo;
@@ -50,21 +44,18 @@ public class fQuartos {
     }
 
     // Metodo para adicionar as informações das variaves no banco
-    public boolean inserir(vQuartos dts) {
+    public boolean inserir(vProdutos dts) {
 
-        sSQL = "insert into tb_quartos (numero, andar, descricao ,caracteristicas ,preco_diaria, estado ,tipo_quarto) "
-                + "values(?,?,?,?,?,?,?) ";
+        sSQL = "insert into tb_produtos (nome, descricao, unidade_medida, preco_venda) "
+                + "values(?,?,?,?) ";
         try {
 
             PreparedStatement pst = cn.prepareStatement(sSQL);
 
-            pst.setString(1, dts.getNumero());
-            pst.setString(2, dts.getAndar());
-            pst.setString(3, dts.getDescricao());
-            pst.setString(4, dts.getCaracteristicas());
-            pst.setDouble(5, dts.getPrecoDiaria());
-            pst.setString(6, dts.getEstado());
-            pst.setString(7, dts.getTipoQuarto());
+            pst.setString(1, dts.getNome());
+            pst.setString(2, dts.getDescricao());
+            pst.setString(3, dts.getUnidade_medida());
+            pst.setDouble(4, dts.getValor_produto());
 
             int n = pst.executeUpdate();
             if (n != 0) {
@@ -80,21 +71,20 @@ public class fQuartos {
     }
 
     // Metodo para editar as variaves no banco
-    public boolean editar(vQuartos dts) {
+    public boolean editar(vProdutos dts) {
 
-        sSQL = "update tb_quartos set numero=?, andar=?, descricao=? ,caracteristicas=? ,preco_diaria=? , estado=? ,tipo_quarto=? "
-                + "where id_quartos=?";
+        sSQL = "update tb_produtos set nome=?, descricao=? ,unidade_medida=? ,preco_venda=? "
+                + "where id_produtos=?";
 
         try {
             PreparedStatement pst = cn.prepareStatement(sSQL);
-            pst.setString(1, dts.getNumero());
-            pst.setString(2, dts.getAndar());
-            pst.setString(3, dts.getDescricao());
-            pst.setString(4, dts.getCaracteristicas());
-            pst.setDouble(5, dts.getPrecoDiaria());
-            pst.setString(6, dts.getEstado());
-            pst.setString(7, dts.getTipoQuarto());
-            pst.setInt(8, dts.getIdQuartos());
+            pst.setString(1, dts.getNome());
+            pst.setString(2, dts.getDescricao());
+            pst.setString(3, dts.getUnidade_medida());
+            pst.setDouble(4, dts.getValor_produto());
+            pst.setInt(5, dts.getIdProduto());
+            
+            
             int n = pst.executeUpdate();
             if (n != 0) {
                 return true;
@@ -109,13 +99,13 @@ public class fQuartos {
     }
 
     // Metodo para exluir as informações das variaves no banco
-    public boolean deletar(vQuartos dts) {
+    public boolean deletar(vProdutos dts) {
 
-        sSQL = "delete from tb_quartos where id_quartos=?";
+        sSQL = "delete from tb_produtos where id_produtos=?";
 
         try {
             PreparedStatement pst = cn.prepareStatement(sSQL);
-            pst.setInt(0, dts.getIdQuartos());
+            pst.setInt(0, dts.getIdProduto());
             int n = pst.executeUpdate();
             if (n != 0) {
                 return true;
@@ -128,5 +118,4 @@ public class fQuartos {
             return false;
         }
     }
-
 }
