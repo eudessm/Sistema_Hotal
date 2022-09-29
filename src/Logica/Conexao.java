@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 
 public class Conexao {
   public String db = "bancoreserva";
-	public String url = "jdbc:mysql://27.0.0.1/" + db;
+	public String url = "jdbc:mysql://127.0.0.1/" + db;
 	public String user = "root";
 	public String pass = "";
 
@@ -24,7 +24,7 @@ public class Conexao {
 			link = DriverManager.getConnection(this.url, this.user, this.pass);
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO: handle exception
-			JOptionPane.showConfirmDialog(null, "Erro de Conexão:" + e);
+			JOptionPane.showMessageDialog(null, "Erro de Conexão:" + e);
 		}
 
 		return link;
