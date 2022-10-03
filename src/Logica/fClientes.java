@@ -1,6 +1,7 @@
 package Logica;
 
-import Dados.vClientes;
+import Dados.vclientes;
+import Dados.vprodutos;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,23 +9,26 @@ import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class fClientes {
+public class fclientes {
 
-    private Conexao mysql = new Conexao();
+    private conexao mysql = new conexao();
     private Connection cn = mysql.conectar();
     private String sSQL = "";
     private String sSQL2 = "";
+    public Integer totalregistros;
 
     public DefaultTableModel mostrar(String buscar) {
-        DefaultTableModel modelo;
-        // vai aparecer no cabeçalho da lista  "titulo"
-        String[] titulo = {"ID", "Nome", "Nome Pai", " Nome Mãe", "Documento", "Numero Doc", "Endereço", "Telefone", "Email", "Código"};
-        String[] registro = new String[10];
 
-        modelo = new DefaultTableModel(null, titulo);
-        sSQL = "Select p.id_pessoa, p.nome, p.nome_pai, p.nome_mae, p.tipo_documento, p.num_documento, p.endereco, p.telefone, p.email,"
-                + "c.codigo_cliente from tb_pessoas p inner join tb_clientes c "
-                + "on p.id_pessoa = c.id_pessoa where num_documento like '%" + buscar + "%' order by id_pessoa desc";
+        DefaultTableModel modelo;
+        String[] titulos = {"ID", "Nome", "Nome Pai", "Nome Mãe", "Documento", "Numero DOC", "Endereço", "Telefone", "Email", "Código"};
+        String[] registro = new String[10];
+        totalregistros = 0;
+
+        modelo = new DefaultTableModel(null, titulos);
+        sSQL = "select p.id_pessoa,p.nome,p.nome_pai,p.nome_mae,p.tipo_documento,p.num_documento,"
+                + "p.endereco,p.telefone,p.email,c.codigo_cliente from tb_pessoas p inner join tb_clientes c "
+                + "on p.id_pessoa=c.id_pessoa where num_documento like '%"
+                + buscar + "%' order by id_pessoa desc";
 
         try {
             Statement st = cn.createStatement();
@@ -41,24 +45,22 @@ public class fClientes {
                 registro[8] = rs.getString("email");
                 registro[9] = rs.getString("codigo_cliente");
 
+                totalregistros = totalregistros + 1;
                 modelo.addRow(registro);
             }
             return modelo;
-
         } catch (Exception e) {
-            // TODO: handle exception
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showConfirmDialog(null, e);
             return null;
         }
+
     }
 
-    // Metodo para adicionar as informações das variaves no banco
-    public boolean inserir(vClientes dts) {
-
-        sSQL = "insert into tb_pessoas (nome, nome_pai, nome_mae,tipo_documento, num_documento, endereco, telefone, email) "
-                + "values(?,?,?,?,?,?,?,?) ";
-        sSQL2 = "insert into tb_clientes (id_pessoa, codigo_cliente) "
-                + "values((select id_pessoa from tb_pessoas order by id_pessoa desc limit 1),?) ";
+    public boolean inserir(vclientes dts) {
+        sSQL = "insert into tb_pessoas (nome, nome_pai, nome_mae, tipo_documento, num_documento, endereco, telefone, email)"
+                + "values(?,?,?,?,?,?,?,?)";
+        sSQL2 = "insert into tb_clientes (id_pessoa, codigo_cliente)"
+                + "values((select id_pessoa from tb_pessoas order by id_pessoa desc limit 1),?)";
         try {
 
             PreparedStatement pst = cn.prepareStatement(sSQL);
@@ -72,27 +74,34 @@ public class fClientes {
             pst.setString(6, dts.getEndereco());
             pst.setString(7, dts.getTelefone());
             pst.setString(8, dts.getEmail());
+
             pst2.setString(1, dts.getCodigo_cliente());
 
-           int n = pst.executeUpdate();
-            int n2 = pst2.executeUpdate();
-            if (n != 0 && n2 != 0) {
-                return false;
+            int n = pst.executeUpdate();
+            if (n != 0) {
+
+                int n2 = pst2.executeUpdate();
+                if (n2 != 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+
             } else {
                 return false;
             }
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showConfirmDialog(null, e);
             return false;
         }
     }
 
-    // Metodo para editar as variaves no banco
-    public boolean editar(vClientes dts) {
+    public boolean editar(vclientes dts) {
 
-        sSQL = "update tb_pessoas set nome=?, nome_pai=? ,nome_mae=? ,tipo_documento=?, num_documento=?, endereco=?, telefone=?, email=? "
+        sSQL = "update tb_produtos set nome=?, nome_pai=?, nome_mae=?, tipo_documento=?, num_documento=?, endereco=?, telefone=?, email=?"
                 + "where id_pessoa=?";
-        sSQL2 = "update tb_clientes set  codipo_cliente=?"
+        sSQL2 = "update tb_clientes set codigo_cliente=?"
                 + "where id_pessoa=?";
 
         try {
@@ -108,47 +117,63 @@ public class fClientes {
             pst.setString(6, dts.getEndereco());
             pst.setString(7, dts.getTelefone());
             pst.setString(8, dts.getEmail());
-            pst2.setString(1, dts.getCodigo_cliente());
+            pst.setInt(9, dts.getId_pessoa());
 
             pst2.setString(1, dts.getCodigo_cliente());
             pst2.setInt(2, dts.getId_pessoa());
 
             int n = pst.executeUpdate();
-            int n2 = pst2.executeUpdate();
-            if (n != 0 && n2 != 0) {
-                return false;
+            if (n != 0) {
+
+                int n2 = pst2.executeUpdate();
+                if (n2 != 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+
             } else {
                 return false;
             }
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showConfirmDialog(null, e);
             return false;
         }
     }
 
-    // Metodo para exluir as informações das variaves no banco
-    public boolean deletar(vClientes dts) {
-
+    public boolean deletar(vclientes dts) {
         sSQL = "delete from tb_clientes where id_pessoa=?";
         sSQL2 = "delete from tb_pessoas where id_pessoa=?";
 
         try {
+
             PreparedStatement pst = cn.prepareStatement(sSQL);
             PreparedStatement pst2 = cn.prepareStatement(sSQL2);
 
             pst.setInt(1, dts.getId_pessoa());
+
             pst2.setInt(1, dts.getId_pessoa());
 
             int n = pst.executeUpdate();
-            int n2 = pst2.executeUpdate();
-            if (n != 0 && n2 != 0) {
-                return false;
+            if (n != 0) {
+
+                int n2 = pst2.executeUpdate();
+                if (n2 != 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+
             } else {
                 return false;
             }
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showConfirmDialog(null, e);
             return false;
         }
+
     }
+
 }

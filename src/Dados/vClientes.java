@@ -1,14 +1,14 @@
 package Dados;
 
-public class vClientes extends vPessoas {
+
+public class vclientes extends vpessoas {
 
     private String codigo_cliente;
 
-    public vClientes() {
+    public vclientes() {
     }
 
-    public vClientes(String codigo_cliente, int id_pessoa, String nome, String nome_pai, String nome_mae, String tipo_documento, String num_documento, String endereco, String telefone, String email) {
-        super(id_pessoa, nome, nome_pai, nome_mae, tipo_documento, num_documento, endereco, telefone, email);
+    public vclientes(String codigo_cliente) {
         this.codigo_cliente = codigo_cliente;
     }
 

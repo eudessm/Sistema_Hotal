@@ -1,6 +1,7 @@
 package Dados;
 
-public class vPessoas {
+
+public class vpessoas {
 
     private int id_pessoa;
     private String nome;
@@ -12,10 +13,10 @@ public class vPessoas {
     private String telefone;
     private String email;
 
-    public vPessoas() {
+    public vpessoas() {
     }
 
-    public vPessoas(int id_pessoa, String nome, String nome_pai, String nome_mae, String tipo_documento, String num_documento, String endereco, String telefone, String email) {
+    public vpessoas(int id_pessoa, String nome, String nome_pai, String nome_mae, String tipo_documento, String num_documento, String endereco, String telefone, String email) {
         this.id_pessoa = id_pessoa;
         this.nome = nome;
         this.nome_pai = nome_pai;

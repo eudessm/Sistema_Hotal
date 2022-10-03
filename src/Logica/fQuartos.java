@@ -1,7 +1,6 @@
-
 package Logica;
 
-import Dados.vQuartos;
+import Dados.vquartos;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,21 +8,21 @@ import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
+public class fquartos {
 
-public class fQuartos {
-
-    private Conexao mysql = new Conexao();
+    private conexao mysql = new conexao();
     private Connection cn = mysql.conectar();
     private String sSQL = "";
-    public Integer  totalRegistro;
+    public Integer totalregistros;
 
     public DefaultTableModel mostrar(String buscar) {
+
         DefaultTableModel modelo;
-        // vai aparecer no cabeçalho da lista  "titulo"
-        String[] titulo = {"id", "numero", "andar", "descrição", "caracteristicas", "preço", "Status", "Tipo de Quarto"};
+        String[] titulos = {"ID", "Número", "Andar", "Descrição", "Caracteristicas", "Preço", "Estado", "Tipo de Quarto"};
         String[] registro = new String[8];
-        totalRegistro = 0;
-        modelo = new DefaultTableModel(null, titulo);
+        totalregistros = 0;
+
+        modelo = new DefaultTableModel(null, titulos);
         sSQL = "select * from tb_quartos where andar like '%" + buscar + "%' order by id_quartos";
 
         try {
@@ -38,33 +37,32 @@ public class fQuartos {
                 registro[5] = rs.getString("preco_diaria");
                 registro[6] = rs.getString("estado");
                 registro[7] = rs.getString("tipo_quarto");
+
+                totalregistros = totalregistros + 1;
                 modelo.addRow(registro);
             }
             return modelo;
-
         } catch (Exception e) {
-            // TODO: handle exception
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showConfirmDialog(null, e);
             return null;
         }
+
     }
 
-    // Metodo para adicionar as informações das variaves no banco
-    public boolean inserir(vQuartos dts) {
+    public boolean inserir(vquartos dts) {
+        sSQL = "insert into tb_quartos (numero, andar, descricao, caracteristicas, preco_diaria, estado, tipo_quarto)"
+                + "values(?,?,?,?,?,?,?)";
 
-        sSQL = "insert into tb_quartos (numero, andar, descricao ,caracteristicas ,preco_diaria, estado ,tipo_quarto) "
-                + "values(?,?,?,?,?,?,?) ";
         try {
 
             PreparedStatement pst = cn.prepareStatement(sSQL);
-
             pst.setString(1, dts.getNumero());
             pst.setString(2, dts.getAndar());
             pst.setString(3, dts.getDescricao());
             pst.setString(4, dts.getCaracteristicas());
-            pst.setDouble(5, dts.getPrecoDiaria());
+            pst.setDouble(5, dts.getValordiaria());
             pst.setString(6, dts.getEstado());
-            pst.setString(7, dts.getTipoQuarto());
+            pst.setString(7, dts.getTipoquarto());
 
             int n = pst.executeUpdate();
             if (n != 0) {
@@ -74,15 +72,14 @@ public class fQuartos {
             }
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showConfirmDialog(null, e);
             return false;
         }
     }
 
-    // Metodo para editar as variaves no banco
-    public boolean editar(vQuartos dts) {
+    public boolean editar(vquartos dts) {
 
-        sSQL = "update tb_quartos set numero=?, andar=?, descricao=? ,caracteristicas=? ,preco_diaria=? , estado=? ,tipo_quarto=? "
+        sSQL = "update tb_quartos set numero=?, andar=?, descricao=?, caracteristicas=?, preco_diaria=?, estado=?, tipo_quarto=?"
                 + "where id_quartos=?";
 
         try {
@@ -91,10 +88,11 @@ public class fQuartos {
             pst.setString(2, dts.getAndar());
             pst.setString(3, dts.getDescricao());
             pst.setString(4, dts.getCaracteristicas());
-            pst.setDouble(5, dts.getPrecoDiaria());
+            pst.setDouble(5, dts.getValordiaria());
             pst.setString(6, dts.getEstado());
-            pst.setString(7, dts.getTipoQuarto());
-            pst.setInt(8, dts.getIdQuartos());
+            pst.setString(7, dts.getTipoquarto());
+            pst.setInt(8, dts.getIdquartos());
+
             int n = pst.executeUpdate();
             if (n != 0) {
                 return true;
@@ -103,28 +101,25 @@ public class fQuartos {
             }
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showConfirmDialog(null, e);
             return false;
         }
     }
 
-    // Metodo para exluir as informações das variaves no banco
-    public boolean deletar(vQuartos dts) {
-
+    public boolean deletar(vquartos dts) {
         sSQL = "delete from tb_quartos where id_quartos=?";
 
         try {
             PreparedStatement pst = cn.prepareStatement(sSQL);
-            pst.setInt(0, dts.getIdQuartos());
+            pst.setInt(1, dts.getIdquartos());
             int n = pst.executeUpdate();
             if (n != 0) {
                 return true;
             } else {
                 return false;
             }
-
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showConfirmDialog(null, e);
             return false;
         }
     }

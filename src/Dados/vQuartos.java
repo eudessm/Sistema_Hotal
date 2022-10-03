@@ -1,34 +1,37 @@
-
 package Dados;
 
-public class vQuartos {
-    private int idQuartos;
+public class vquartos {
+
+    private int idquartos;
     private String numero;
     private String andar;
     private String descricao;
     private String caracteristicas;
-    private double precoDiaria;
+    private Double valordiaria;
     private String estado;
-    private String tipoQuarto;
-    
-    public vQuartos(){}
-     public vQuartos(int idQuartos, String numero,String andar, String descricao,String caracteristicas,
-             double precoDiaria, String estado,String tipoQuarto){
-     this.numero=numero;
-     this.andar=andar;
-     this.descricao=descricao;
-     this.caracteristicas=caracteristicas;
-     this.precoDiaria=precoDiaria;
-     this.estado=estado;
-     this.tipoQuarto=tipoQuarto;
-     }
+    private String tipoquarto;
 
-    public int getIdQuartos() {
-        return idQuartos;
+    public vquartos(int idquartos, String numero, String andar, String descricao, String caracteristicas, Double valordiaria, String estado, String tipoquarto) {
+        this.idquartos = idquartos;
+        this.numero = numero;
+        this.andar = andar;
+        this.descricao = descricao;
+        this.caracteristicas = caracteristicas;
+        this.valordiaria = valordiaria;
+        this.estado = estado;
+        this.tipoquarto = tipoquarto;
     }
 
-    public void setIdQuartos(int idQuartos) {
-        this.idQuartos = idQuartos;
+    public vquartos() {
+
+    }
+
+    public int getIdquartos() {
+        return idquartos;
+    }
+
+    public void setIdquartos(int idquartos) {
+        this.idquartos = idquartos;
     }
 
     public String getNumero() {
@@ -42,7 +45,6 @@ public class vQuartos {
     public String getAndar() {
         return andar;
     }
-
 
     public void setAndar(String andar) {
         this.andar = andar;
@@ -64,12 +66,12 @@ public class vQuartos {
         this.caracteristicas = caracteristicas;
     }
 
-    public double getPrecoDiaria() {
-        return precoDiaria;
+    public Double getValordiaria() {
+        return valordiaria;
     }
 
-    public void setPrecoDiaria(double precoDiaria) {
-        this.precoDiaria = precoDiaria;
+    public void setValordiaria(Double valordiaria) {
+        this.valordiaria = valordiaria;
     }
 
     public String getEstado() {
@@ -80,17 +82,12 @@ public class vQuartos {
         this.estado = estado;
     }
 
-    public String getTipoQuarto() {
-        return tipoQuarto;
+    public String getTipoquarto() {
+        return tipoquarto;
     }
 
-    public void setTipoQuarto(String tipoQuarto) {
-        this.tipoQuarto = tipoQuarto;
+    public void setTipoquarto(String tipoquarto) {
+        this.tipoquarto = tipoquarto;
     }
-     
-     
-    
-    
-   
-    
+
 }
